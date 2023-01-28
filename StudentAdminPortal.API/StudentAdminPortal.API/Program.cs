@@ -14,6 +14,13 @@ builder.Services.AddDbContext<StudentAdminContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("StudentAdminPortalDb")));
 builder.Services.AddScoped<IStudentRepository,SqlStudentRepository>();
 builder.Services.AddAutoMapper(typeof(StudentAdminContext));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyCors", opts =>
+    {
+        opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,5 +35,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("MyCors");
 
 app.Run();
